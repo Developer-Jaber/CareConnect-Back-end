@@ -31,7 +31,16 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-    
+    // create collection here
+    const campCollection = client.db('MadicalCamp').collection('MadicalCampCollection')
+
+
+
+    // create api for getting camp data
+    app.get('/madical_camp',async(req,res)=>{
+      const result = await campCollection.find().toArray();
+      res.send(result);
+    })
 
 
 
