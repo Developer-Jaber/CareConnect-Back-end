@@ -3,7 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 const app = express();
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 
 
@@ -40,6 +40,13 @@ async function run() {
     app.get('/madical_camp',async(req,res)=>{
       const result = await campCollection.find().toArray();
       res.send(result);
+    })
+
+    app.get('/madical_camp/:id', async (req, res) => {
+      const id = req.params.id;
+      const queiry = { _id: new ObjectId(id) };
+      const result = await campCollection.findOne(queiry);
+      res.send(result)
     })
 
 
