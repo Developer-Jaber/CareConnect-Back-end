@@ -33,7 +33,7 @@ async function run() {
 
     // create collection here
     const campCollection = client.db('MadicalCamp').collection('MadicalCampCollection')
-
+    const participantCollection = client.db('Participants').collection('all-participants')
 
 
     // create api for getting camp data
@@ -42,12 +42,35 @@ async function run() {
       res.send(result);
     })
 
+    // create api for getting single camp data by id
     app.get('/madical_camp/:id', async (req, res) => {
       const id = req.params.id;
       const queiry = { _id: new ObjectId(id) };
       const result = await campCollection.findOne(queiry);
       res.send(result)
     })
+
+    // create api for posting Participet join data
+    app.post('/participants', async (req, res) => {
+      const user = req.body;
+      const result = await participantCollection.insertOne(user);
+      res.send(result);
+    })
+
+    // create API route to increase the participant count
+    app.patch('/madical_camp/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const update = { $inc: { participants: 1 } };
+    
+      const result = await campCollection.updateOne(query, update);
+    
+      if (result.matchedCount === 0) {
+        return res.status(404).send({ error: "Camp not found" });
+      }
+      res.send({ message: "Participant count updated successfully" });
+    });
+    
 
 
 
