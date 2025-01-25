@@ -37,7 +37,7 @@ async function run() {
 
 
     // create api for getting camp data
-    app.get('/madical_camp',async(req,res)=>{
+    app.get('/madical_camp', async (req, res) => {
       const result = await campCollection.find().toArray();
       res.send(result);
     })
@@ -62,15 +62,34 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const update = { $inc: { participants: 1 } };
-    
+
       const result = await campCollection.updateOne(query, update);
-    
+
       if (result.matchedCount === 0) {
         return res.status(404).send({ error: "Camp not found" });
       }
       res.send({ message: "Participant count updated successfully" });
     });
-    
+
+    // -============================For Feedback========================-//
+    // Feedback collection
+    const feedbackCollection = client.db('MadicalCamp').collection('Feedback');
+
+    // API to post feedback
+    app.post('/feedback', async (req, res) => {
+      const feedback = req.body; // {campId, participantName, feedback, rating, date}
+      const result = await feedbackCollection.insertOne(feedback);
+      res.send(result);
+    });
+
+    // API to get feedback for a specific camp
+    app.get('/feedback/:campId', async (req, res) => {
+      const { campId } = req.params;
+      const result = await feedbackCollection.find({ campId }).toArray();
+      res.send(result);
+    });
+
+
 
 
 
@@ -87,10 +106,10 @@ run().catch(console.dir);
 
 
 
-app.get('/',(req,res)=>{
-    res.send('CareConect Camp server is running....!')
+app.get('/', (req, res) => {
+  res.send('CareConect Camp server is running....!')
 })
 
-app.listen(port,()=>{
-    console.log(`CareConect Camp server is running on port: ${port}`);
+app.listen(port, () => {
+  console.log(`CareConect Camp server is running on port: ${port}`);
 })
