@@ -89,8 +89,29 @@ async function run() {
       res.send(result);
     });
 
+    // -============================For Users========================-//
+    // users collection
+    const usersCollection = client.db('MadicalCamp').collection('users');
 
+    // API to post users
+    app.post('/users', async (req, res) => {
+      const user = req.body;
+      const queiry = { email: user.email };
+      const existingUser = await usersCollection.findOne(queiry);
+      if (existingUser) {
+        return res.send({ message: 'User alrady exist', insertedId: null })
+      }
+      const result = await usersCollection.insertOne(user);
+      res.send(result);
+    });
 
+    // -============================For Organaiger========================-//
+    // Create API for post a camp by organaiger
+    app.post('/madical_camp', async (req, res) => {
+      const newCamp = req.body;
+      const result = await campCollection.insertOne(newCamp);
+      res.status(201).send(result);
+    });
 
 
 
