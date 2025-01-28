@@ -125,7 +125,13 @@ async function run() {
       res.send(user || {})
     })
     
-
+    // -============================For manage camp========================-//
+    app.delete('/delete-camp/:campId', async (req, res) => {
+      const campId = req.params.campId
+      const result = await campCollection.deleteOne({ _id: new ObjectId(campId) })
+      res.send(result)
+    })
+    
 
 
     // Send a ping to confirm a successful connection
