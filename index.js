@@ -113,6 +113,19 @@ async function run() {
       res.status(201).send(result);
     });
 
+    // -============================For getting admin========================-//
+    app.get('/users', async (req, res) => {
+      const user = req.body;
+      const result = await usersCollection.find(user).toArray();
+      res.send(result);
+    })
+    app.get('/users/:email', async (req, res) => {
+      const { email } = req.params
+      const user = await usersCollection.findOne({ email: email })
+      res.send(user || {})
+    })
+    
+
 
 
     // Send a ping to confirm a successful connection
