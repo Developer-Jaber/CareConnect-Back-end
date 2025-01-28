@@ -56,6 +56,12 @@ async function run() {
       const result = await participantCollection.insertOne(user);
       res.send(result);
     })
+     // create api for getting all Participet data
+     app.get('/participants', async (req, res) => {
+      const participet = req.body;
+      const result = await participantCollection.find(participet).toArray();
+      res.send(result);
+    })
 
     // create API route to increase the participant count
     app.patch('/madical_camp/:id', async (req, res) => {
@@ -131,6 +137,25 @@ async function run() {
       const result = await campCollection.deleteOne({ _id: new ObjectId(campId) })
       res.send(result)
     })
+
+    // -============================For manage resistered camp========================-//
+    // for confirm
+    app.patch('/confirm-payment/:campId', async (req, res) => {
+      const campId = req.params.campId
+      const result = await participantCollection.updateOne(
+        { _id: new ObjectId(campId) },
+        { $set: { confirmationStatus: 'Confirmed' } }
+      )
+      res.send(result)
+    })
+    // for cancell
+    app.delete('/cancel-registration/:campId', async (req, res) => {
+      const campId = req.params.campId
+      const result = await registeredCampsCollection.deleteOne({
+        _id: new ObjectId(campId)
+      })
+      res.send(result)
+    })    
     
 
 
