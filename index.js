@@ -29,7 +29,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     // create collection here
     const campCollection = client.db('MadicalCamp').collection('MadicalCampCollection')
@@ -56,8 +56,8 @@ async function run() {
       const result = await participantCollection.insertOne(user);
       res.send(result);
     })
-     // create api for getting all Participet data
-     app.get('/participants', async (req, res) => {
+    // create api for getting all Participet data
+    app.get('/participants', async (req, res) => {
       const participet = req.body;
       const result = await participantCollection.find(participet).toArray();
       res.send(result);
@@ -130,7 +130,7 @@ async function run() {
       const user = await usersCollection.findOne({ email: email })
       res.send(user || {})
     })
-    
+
     // -============================For manage camp========================-//
     app.delete('/delete-camp/:campId', async (req, res) => {
       const campId = req.params.campId
@@ -151,16 +151,14 @@ async function run() {
     // for cancell
     app.delete('/cancel-registration/:campId', async (req, res) => {
       const campId = req.params.campId
-      const result = await registeredCampsCollection.deleteOne({
-        _id: new ObjectId(campId)
-      })
+      const result = await participantCollection.deleteOne({ _id: new ObjectId(campId)})
       res.send(result)
-    })    
-    
+    })
+
 
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
