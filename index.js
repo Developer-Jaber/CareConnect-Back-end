@@ -62,6 +62,12 @@ async function run() {
       const result = await participantCollection.find(participet).toArray();
       res.send(result);
     })
+    app.get('/participants/email/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = { participantEmail: email };
+      const user = await participantCollection.find(query).toArray();
+      res.send(user)
+    })
 
     // create API route to increase the participant count
     app.patch('/madical_camp/:id', async (req, res) => {
