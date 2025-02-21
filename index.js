@@ -129,6 +129,23 @@ async function run() {
       res.send(result);
     });
 
+    // -============================For Success Story========================-//
+    // Feedback collection
+    const successStoryCollection = client.db('MadicalCamp').collection('successStory');
+
+    // API to post feedback
+    app.post('/success-story', async (req, res) => {
+      const feedback = req.body; 
+      const result = await successStoryCollection.insertOne(feedback);
+      res.send(result);
+    });
+
+    app.get('/success-story', async (req, res) => {
+      const feedback = req.body; 
+      const result = await successStoryCollection.find(feedback).toArray();
+      res.send(result);
+    });
+
     // -============================For Users========================-//
     // users collection
     const usersCollection = client.db('MadicalCamp').collection('users');
