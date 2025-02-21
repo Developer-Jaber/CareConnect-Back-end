@@ -116,6 +116,12 @@ async function run() {
       res.send(result);
     });
 
+    app.get('/feedback', async (req, res) => {
+      const feedback = req.body; 
+      const result = await feedbackCollection.find(feedback).toArray();
+      res.send(result);
+    });
+
     // API to get feedback for a specific camp
     app.get('/feedback/:campId', async (req, res) => {
       const { campId } = req.params;
